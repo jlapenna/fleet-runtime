@@ -1,0 +1,61 @@
+{
+  "name": "@jlapenna/fleet-runtime",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Neutral runtime primitives shared by first-party fleet applications.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./env": {
+      "types": "./dist/env.d.ts",
+      "default": "./dist/env.js"
+    },
+    "./logging": {
+      "types": "./dist/logging.d.ts",
+      "default": "./dist/logging.js"
+    },
+    "./vitest/server-only-mock": "./dist/vitest/server-only-mock.js",
+    "./vitest/jest-shim": {
+      "types": "./dist/vitest/jest-shim.d.ts",
+      "default": "./dist/vitest/jest-shim.js"
+    },
+    "./vitest/jest-dom-setup": "./dist/vitest/jest-dom-setup.js",
+    "./vitest/matchmedia-mock": {
+      "types": "./dist/vitest/matchmedia-mock.d.ts",
+      "default": "./dist/vitest/matchmedia-mock.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "pnpm run build",
+    "test": "pnpm run build && node --test test/*.test.mjs"
+  },
+  "peerDependencies": {
+    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.0.0",
+    "vitest": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@testing-library/jest-dom": {
+      "optional": true
+    },
+    "@testing-library/react": {
+      "optional": true
+    },
+    "vitest": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.2",
+    "@types/node": "24.10.11",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  }
+}
