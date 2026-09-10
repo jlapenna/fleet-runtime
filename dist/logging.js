@@ -1,4 +1,12 @@
 export const LOG_LEVELS = ['error', 'warn', 'info', 'debug'];
+const RESERVED_STRUCTURED_KEYS = new Set([
+    'severity',
+    'message',
+    'logging.googleapis.com/trace',
+    'httpRequest',
+    'userId',
+    'action',
+]);
 let logEnricher = () => ({});
 let logFormatter = (args) => args
     .map((arg) => {
@@ -60,6 +68,34 @@ export class Logger {
             return;
         }
         console[severity === 'info' ? 'log' : severity](...args);
+    }
+    /**
+     * Emits machine-readable top-level fields in structured environments.
+     * Reserved envelope/context keys cannot be supplied by callers.
+     */
+    structured(severity, message, fields, options = {}) {
+        if (!shouldLog(this.level, severity))
+            return;
+        const safeFields = Object.fromEntries(Object.entries(fields).filter(([key]) => !RESERVED_STRUCTURED_KEYS.has(key)));
+        if (this.options.isOnGoogleCloud?.() ||
+            this.options.forceStructuredLogging?.()) {
+            const enrichment = options.enrich === false ? {} : logEnricher();
+            console.log(JSON.stringify({
+                severity: severity.toUpperCase(),
+                message,
+                ...safeFields,
+                ...(enrichment.traceId
+                    ? { 'logging.googleapis.com/trace': enrichment.traceId }
+                    : {}),
+                ...(enrichment.requestUrl
+                    ? { httpRequest: { requestUrl: enrichment.requestUrl } }
+                    : {}),
+                ...(enrichment.userId ? { userId: enrichment.userId } : {}),
+                ...(enrichment.action ? { action: enrichment.action } : {}),
+            }));
+            return;
+        }
+        console[severity === 'info' ? 'log' : severity](message, safeFields);
     }
     info(...args) { if (shouldLog(this.level, 'info'))
         this.log('info', ...args); }

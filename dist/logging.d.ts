@@ -8,6 +8,7 @@ export interface LogEnrichment {
 }
 export type LogEnricher = () => LogEnrichment;
 export type LogFormatter = (args: unknown[]) => string;
+export type StructuredLogFields = Readonly<Record<string, unknown>>;
 export declare function shouldLog(currentLevel: string, messageLevel: string): boolean;
 export declare function setLogEnricher(enricher: LogEnricher): void;
 export declare function setLogFormatter(formatter: LogFormatter): void;
@@ -25,6 +26,13 @@ export declare class Logger {
     static getLogLevel(): LogLevel;
     getLevel(): LogLevel;
     private log;
+    /**
+     * Emits machine-readable top-level fields in structured environments.
+     * Reserved envelope/context keys cannot be supplied by callers.
+     */
+    structured(severity: LogLevel, message: string, fields: StructuredLogFields, options?: {
+        enrich?: boolean;
+    }): void;
     info(...args: unknown[]): void;
     debug(...args: unknown[]): void;
     warn(...args: unknown[]): void;
