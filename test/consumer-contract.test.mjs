@@ -6,8 +6,12 @@ import {
   optionalEnv,
   requiredEnv,
   splitEnvList,
-} from '../dist/env.js';
-import { Logger, setLogEnricher, shouldLog } from '../dist/logging.js';
+} from '@jlapenna/fleet-runtime/env';
+import {
+  Logger,
+  setLogEnricher,
+  shouldLog,
+} from '@jlapenna/fleet-runtime/logging';
 
 test('environment helpers preserve the public contract', () => {
   const environment = { EMPTY: 'null', ENABLED: 'TRUE', LIST: 'a:b, c', VALUE: 'ok' };
