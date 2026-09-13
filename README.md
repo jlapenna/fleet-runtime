@@ -19,8 +19,7 @@ Keep this package limited to runtime and test primitives shared by multiple
 first-party applications. Agent/session behavior belongs in `agent-lcars`, and
 repository-management commands belong in `repo-tools`.
 
-Pull requests pack the candidate artifact and compile the `env-vars` and
-`logging` adapters in both `jlapenna/agent-lcars` and
-`supersprinklesracing/sprinkles`. This protects the cross-repository package
-boundary before a change reaches `main`; each consumer remains responsible for
-refreshing its own lockfile to the current `main` artifact.
+Package tests resolve the public subpaths through the package's own export map,
+so a broken Git artifact cannot reach `main`. Each consumer refreshes its own
+lockfile through a protected Renovate pull request; that repository's required
+CI compiles and tests its real adapters at the cross-repository boundary.
