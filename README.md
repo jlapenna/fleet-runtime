@@ -23,3 +23,7 @@ Package tests resolve the public subpaths through the package's own export map,
 so a broken Git artifact cannot reach `main`. Each consumer refreshes its own
 lockfile through a protected Renovate pull request; that repository's required
 CI compiles and tests its real adapters at the cross-repository boundary.
+
+Compiled `dist/` artifacts are committed intentionally. Consumers install this
+package directly from Git, so installs must not depend on lifecycle scripts or
+package-specific build permissions.
