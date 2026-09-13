@@ -4,6 +4,11 @@
   "private": false,
   "description": "Neutral runtime primitives shared by first-party fleet applications.",
   "license": "MIT",
+  "packageManager": "pnpm@11.24.0",
+  "engines": {
+    "node": "24",
+    "pnpm": "11.24.0"
+  },
   "type": "module",
   "exports": {
     "./env": {
@@ -30,6 +35,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "prepare": "pnpm run build",
     "test": "pnpm run build && node --test test/*.test.mjs"
   },
   "peerDependencies": {
