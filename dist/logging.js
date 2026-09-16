@@ -7,13 +7,36 @@ const RESERVED_STRUCTURED_KEYS = new Set([
     'userId',
     'action',
 ]);
+const MAX_CAUSE_CHAIN_DEPTH = 5;
+/**
+ * Formats an Error together with its `cause` chain so root causes are never
+ * silently dropped from logs. Each cause is rendered on its own line,
+ * prefixed `Caused by: ` (its stack when it is itself an Error, otherwise
+ * `String(cause)`). Traversal stops after `MAX_CAUSE_CHAIN_DEPTH` causes and
+ * is guarded against cycles.
+ */
+function formatErrorWithCauses(error) {
+    const lines = [error.stack || error.message];
+    const seen = new Set([error]);
+    let cause = error.cause;
+    let depth = 0;
+    while (cause !== undefined && depth < MAX_CAUSE_CHAIN_DEPTH) {
+        if (seen.has(cause))
+            break;
+        seen.add(cause);
+        lines.push(`Caused by: ${cause instanceof Error ? cause.stack || cause.message : String(cause)}`);
+        cause = cause instanceof Error ? cause.cause : undefined;
+        depth += 1;
+    }
+    return lines.join('\n');
+}
 let logEnricher = () => ({});
 let logFormatter = (args) => args
     .map((arg) => {
     if (typeof arg === 'string')
         return arg;
     if (arg instanceof Error)
-        return arg.stack || arg.message;
+        return formatErrorWithCauses(arg);
     return JSON.stringify(arg);
 })
     .join(' ');
