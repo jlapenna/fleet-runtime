@@ -2,6 +2,9 @@
 
 Neutral runtime primitives for first-party applications.
 
+See [ARCHITECTURE.md](ARCHITECTURE.md) for ownership and neutrality boundaries,
+and [docs/README.md](docs/README.md) for the documentation index.
+
 This package owns generic environment-value handling, structured console
 logging, and Vitest fixtures. It deliberately contains no Agent LCARS session
 or identity behavior, and no repository-management commands.

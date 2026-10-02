@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import test from 'node:test';
+
+const root = new URL('../', import.meta.url);
+
+async function read(relativePath) {
+  return readFile(new URL(relativePath, root), 'utf8');
+}
+
+test('always-loaded agent context stays compact', async () => {
+  assert.ok(Buffer.byteLength(await read('AGENTS.md')) <= 14 * 1024);
+});
+
+test('agent router points to architecture, docs, owners, and proof', async () => {
+  const agents = await read('AGENTS.md');
+  for (const route of ['ARCHITECTURE.md', 'docs/README.md', 'src/env.ts', 'src/logging.ts', 'src/vitest/', 'pnpm test']) {
+    assert.match(agents, new RegExp(route.replaceAll('.', '\\.'), 'i'));
+  }
+});
+
+test('router does not duplicate release or repository procedures', async () => {
+  assert.doesNotMatch(await read('AGENTS.md'), /gh pr (create|merge)|git (pull|rebase)|pnpm publish/);
+});
+
+test('documentation index targets exist', async () => {
+  for (const path of ['ARCHITECTURE.md', 'README.md', 'test/consumer-contract.test.mjs', 'package.json']) {
+    await assert.doesNotReject(read(path), path);
+  }
+});
+
+test('architecture records the neutral package boundary', async () => {
+  const architecture = await read('ARCHITECTURE.md');
+  for (const concept of ['Neutrality Boundary', 'src/env.ts', 'src/logging.ts', 'src/vitest/', 'Proof Ladder']) {
+    assert.match(architecture, new RegExp(concept.replaceAll('.', '\\.'), 'i'));
+  }
+});
+
+test('negative fixtures violate the contract', () => {
+  assert.ok(Buffer.byteLength('x'.repeat(14 * 1024 + 1)) > 14 * 1024);
+  assert.match('pnpm publish', /pnpm publish/);
+});
