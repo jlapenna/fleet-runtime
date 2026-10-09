@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import { posix } from 'node:path';
 
 const root = new URL('../', import.meta.url);
 
@@ -27,13 +28,12 @@ test('documentation index targets exist', async () => {
   const skillPath = '.agents/skills/fleet-runtime-dev/SKILL.md';
   for (const routerPath of ['AGENTS.md', 'docs/README.md']) {
     const routerUrl = new URL(routerPath, root);
+    const expectedDestination = posix.relative(posix.dirname(routerPath), skillPath);
     const destinations = [...(await read(routerPath)).matchAll(/\[[^\]]*\]\(([^\s)]+)\)/g)]
-      .map((match) => match[1])
-      .filter((destination) => !destination.startsWith('/') && !destination.includes('\\') &&
-        !/^[a-z][a-z0-9+.-]*:/i.test(destination))
-      .map((destination) => new URL(destination, routerUrl));
-    const target = destinations.find((url) => url.href === new URL(skillPath, root).href);
-    assert.ok(target, `${routerPath} must link to the maintenance skill relative to its own directory`);
+      .map((match) => match[1]);
+    assert.ok(destinations.includes(expectedDestination),
+      `${routerPath} must use the canonical document-relative skill destination`);
+    const target = new URL(expectedDestination, routerUrl);
     await assert.doesNotReject(readFile(target, 'utf8'), `${routerPath} skill destination must exist`);
   }
   for (const path of ['ARCHITECTURE.md', 'README.md', 'test/consumer-contract.test.mjs', 'package.json', '.agents/skills/fleet-runtime-dev/SKILL.md']) {
