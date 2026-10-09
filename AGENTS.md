@@ -11,6 +11,9 @@ This is a compact routing file for a deliberately small package.
 
 ## Task Routes
 
+Read the [fleet-runtime-dev skill](.agents/skills/fleet-runtime-dev/SKILL.md) for the local
+source-maintenance workflow and harness upkeep.
+
 | Task | Owner | Proof |
 | --- | --- | --- |
 | Environment values | `src/env.ts` | consumer-contract tests |
