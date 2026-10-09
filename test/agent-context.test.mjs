@@ -28,7 +28,10 @@ test('documentation index targets exist', async () => {
   for (const routerPath of ['AGENTS.md', 'docs/README.md']) {
     const routerUrl = new URL(routerPath, root);
     const destinations = [...(await read(routerPath)).matchAll(/\[[^\]]*\]\(([^\s)]+)\)/g)]
-      .map((match) => new URL(match[1], routerUrl));
+      .map((match) => match[1])
+      .filter((destination) => !destination.startsWith('/') && !destination.includes('\\') &&
+        !/^[a-z][a-z0-9+.-]*:/i.test(destination))
+      .map((destination) => new URL(destination, routerUrl));
     const target = destinations.find((url) => url.href === new URL(skillPath, root).href);
     assert.ok(target, `${routerPath} must link to the maintenance skill relative to its own directory`);
     await assert.doesNotReject(readFile(target, 'utf8'), `${routerPath} skill destination must exist`);
