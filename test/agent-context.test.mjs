@@ -14,7 +14,7 @@ test('always-loaded agent context stays compact', async () => {
 
 test('agent router points to architecture, docs, owners, and proof', async () => {
   const agents = await read('AGENTS.md');
-  for (const route of ['ARCHITECTURE.md', 'docs/README.md', 'src/env.ts', 'src/logging.ts', 'src/vitest/', 'pnpm test']) {
+  for (const route of ['ARCHITECTURE.md', 'docs/README.md', '.agents/skills/fleet-runtime-dev/SKILL.md', 'src/env.ts', 'src/logging.ts', 'src/vitest/', 'pnpm test']) {
     assert.match(agents, new RegExp(route.replaceAll('.', '\\.'), 'i'));
   }
 });
@@ -24,7 +24,11 @@ test('router does not duplicate release or repository procedures', async () => {
 });
 
 test('documentation index targets exist', async () => {
-  for (const path of ['ARCHITECTURE.md', 'README.md', 'test/consumer-contract.test.mjs', 'package.json']) {
+  const skillPath = '.agents/skills/fleet-runtime-dev/SKILL.md';
+  for (const routerPath of ['AGENTS.md', 'docs/README.md']) {
+    assert.ok((await read(routerPath)).includes(skillPath), `${routerPath} must route to ${skillPath}`);
+  }
+  for (const path of ['ARCHITECTURE.md', 'README.md', 'test/consumer-contract.test.mjs', 'package.json', '.agents/skills/fleet-runtime-dev/SKILL.md']) {
     await assert.doesNotReject(read(path), path);
   }
 });
