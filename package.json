@@ -4,10 +4,10 @@
   "private": false,
   "description": "Neutral runtime primitives shared by first-party fleet applications.",
   "license": "MIT",
-  "packageManager": "pnpm@11.24.0",
+  "packageManager": "pnpm@11.28.9",
   "engines": {
     "node": ">=24.22.1 <25",
-    "pnpm": "11.24.0"
+    "pnpm": "11.28.9"
   },
   "type": "module",
   "exports": {
@@ -55,11 +55,11 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "7.0.1",
-    "@testing-library/react": "16.3.2",
-    "@types/node": "24.10.11",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "typescript": "6.0.3",
-    "vitest": "4.1.11"
+    "vitest": "4.1.12"
   }
 }
