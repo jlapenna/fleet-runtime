@@ -1,0 +1,29 @@
+{
+  "skill_name": "fleet-runtime-dev",
+  "evals": [
+    {
+      "id": 1,
+      "name": "add-log-field-shared-package",
+      "prompt": "I want our shared runtime npm package to add a new field to every structured log line it emits. Which source file owns that, what must I check before changing a public import path, and how do I verify the change before opening a PR? Don't run anything.",
+      "expected_output": "src/logging.ts owns structured logging; author source and rebuild dist/ rather than editing it; check package.json exports, tsconfig.build.json and the matching test/*.test.mjs consumer contract; install with pnpm install --frozen-lockfile and run pnpm test before delivery, noting it does not prove consumers have installed or deployed the change.",
+      "files": [],
+      "assertions": [
+        "Names src/logging.ts as the owner of structured logging and says to edit source and build dist/ rather than editing generated dist/ output",
+        "Says to inspect the matching test/*.test.mjs consumer contract (and package.json exports / tsconfig.build.json for the published boundary) before changing a public subpath",
+        "Runs `pnpm test` before delivery and states that it does not prove any consumer has installed or deployed the new artifact"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "consumer-env-name-in-fleet-runtime",
+      "prompt": "In fleet-runtime, a consumer app wants its LCARS dispatch identity environment variable names and rollout policy baked into src/env.ts so every app gets them. Should I add that there? Give me a decision and the plan, don't run anything.",
+      "expected_output": "Declines: application environment names, dispatch identity, business policy and rollout stay with consumers; src/env.ts only owns generic environment normalization, and a shared primitive is added only when useful across consumers without importing their policy.",
+      "files": [],
+      "assertions": [
+        "Declines to put consumer-specific environment names, dispatch identity or rollout policy into fleet-runtime, saying they remain with the consumers",
+        "Says src/env.ts owns environment normalization and a shared primitive is added only when its contract is useful across consumers without importing their policy",
+        "Notes that for an integration change the consuming import and the additional proof needed there must be identified, since the package's own tests do not prove consumer adoption"
+      ]
+    }
+  ]
+}
