@@ -38,7 +38,7 @@
     "test": "pnpm run build && node --test test/*.test.mjs"
   },
   "peerDependencies": {
-    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/jest-dom": "^7.0.0 || ^8.0.0",
     "@testing-library/react": "^16.0.0",
     "vitest": "^5.0.0"
   },
@@ -54,7 +54,7 @@
     }
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/jest-dom": "8.0.0",
     "@testing-library/react": "16.3.3",
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
