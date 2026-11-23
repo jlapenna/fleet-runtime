@@ -4,10 +4,10 @@
   "private": false,
   "description": "Neutral runtime primitives shared by first-party fleet applications.",
   "license": "MIT",
-  "packageManager": "pnpm@12.21.0",
+  "packageManager": "pnpm@12.23.0",
   "engines": {
     "node": ">=24.22.1 <27",
-    "pnpm": "12.21.0"
+    "pnpm": "12.23.0"
   },
   "type": "module",
   "exports": {
